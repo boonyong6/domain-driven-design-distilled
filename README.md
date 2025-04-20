@@ -73,3 +73,40 @@
 
 - **_Aggregate_** pattern - Aggregate entities and value objects together into a **right-sized cluster**.
 - **_Domain Events_** - Help you to **model explicitly** and to **share what has occurred within your model**.
+
+# Chapter 2. Strategic Design with Bounded Contexts and the Ubiquitous Language
+
+- DDD is primarily about **modeling** a _Ubiquitous Language_ in an explicitly _Bounded Context_.
+- _Bounded Context_ is a **semantic contextual boundary**.
+  - Components inside a _Bounded Context_ are **context specific**.
+- When you are just **getting started**, your _Bounded Context_ is somewhat **conceptual** (think of it as part of your **_problem space_**).
+- As your model starts to take on **deeper meaning** and **clarity**, your _Bounded Context_ will quickly transition to your **_solution space_**, with your model being **reflected as source code**.
+- <u>What Is a Problem Space and a Solution Space?</u>
+  - **Problem space:**
+    - **High-level strategic analysis** and **DESIGN steps**.
+    - Can use **simple diagrams** (e.g. **Context Maps**) as you discuss the high-level project drivers and note important **goals** and **risks**.
+  - **Solution space:**
+    - **IMPLEMENT** the solution.
+    - Produce code that **supports integration with other _Bounded Contexts_**.
+- **Model** inside the context boundary reflects a **language** (Ubiquitous Language) that is developed by the team working in the **_Bounded Context_**.
+
+![1-1-strategic-design](images/1-1-strategic-design.png)
+
+- **Boxes** inside the _Bounded Context_ represent the model, which may be implemented as **classes**.
+- **_Core Domain_**
+  - When the _Bounded Context_ is being developed as a **key strategic initiative** (killer feature).
+  - **Choose wisely** what should be part of your Core Domain and what should not.
+- Can think of **_Bounded Contexts_** as being **language boundaries**.
+- <u>Bounded Contexts, Teams, and Source Code Repositories</u>
+  - **Separate source code repository** for each _Bounded Context_.
+  - One team could work on multiple _Bounded Contexts_, but **multiple teams should not work on a single _Bounded Context_**.
+- **Other teams** would have a **different meaning for the same terminology**, because their business knowledge is within a **different context**.
+- One **big reason** to use _Bounded Contexts_ is to solve a **common problem**:
+  - Don't know **when to stop** piling more and more concepts into their domain models.
+  - The language of the model becomes blurred.
+  - Multiple languages in one large, confusing, unbounded model.
+  - The product of trying to do too much, with too many people, in the wrong place.
+
+## Domain Experts and Business Drivers
+
+...
