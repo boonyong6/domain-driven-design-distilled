@@ -109,4 +109,71 @@
 
 ## Domain Experts and Business Drivers
 
-...
+- There may be **hints** communicated by **business stakeholders** that could have been used to help the technical team make **better modeling choices**.
+- **Department**, **team**, **business unit** or **divisions** can provide a **indication of where model boundaries should exist**.
+- There is a trend toward grouping people **by project**.
+  - Organized according to business drivers and under an **area of expertise**.
+
+### Differences in Policies **by Function** (Example)
+
+![2-1-context-specific-model](images/2-1-context-specific-model.png)
+
+- Policy model:
+
+  | Bounded context | Description                                                                                                                    |
+  | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+  | Underwriting    | Expertise that is focused on underwriting, a policy is created based on the **evaluation of the risks** of the insured entity. |
+  | Inspections     | Inspections area of expertise **inspecting a property** that is to be insured.                                                 |
+  | Claims          | Claims area of expertise **tracks the request for payment** by the insured.                                                    |
+
+- DDD emphasizes embracing such differences by **segregating** the different types into **different _Bounded Contexts_**.
+- No need to name these UnderwritingPolicy, ClaimsPolicy, or InspectionsPolicy.
+
+### Another Examples: What Is a Flight?
+
+- In the **airline industry**, a "flight" can have **multiple meanings**:
+  - A single takeoff and landing
+  - Aircraft maintenance
+  - Passenger ticketing
+- Because each of these uses of "flight" is clearly **understood only by its context**, each should be modeled in a separate _Bounded Context_.
+
+## Case Study - Scrum-based agile project management application
+
+- Unbounded model (Initial):
+
+  ![2-2-unbounded-model](images/2-2-unbounded-model.png)
+
+- Let's say we want to facilitate collaboration discussions within the **product team**.
+
+  - Tenant, User, Permission models are needed to identify and authorize users.
+  - Discussion represents one of the **collaborative tools** that we will support.
+
+  ![2-3-unbounded-model](images/2-3-unbounded-model.png)
+
+- Then, we decided that discussions belong within Forums and Discussions have Posts. Also we want to support Shared Calendars.
+
+  ![2-4-unbounded-model](images/2-4-unbounded-model.png)
+
+- And we need a way for **Tenants** to make **Payments**.
+
+  - Will also sell tiered **support plans**, so we need a way to track support **incidences**.
+  - Managed under an **Account**.
+
+  ![2-5-unbounded-model](images/2-5-unbounded-model.png)
+
+- And every product has a specific **Team** that works on the product.
+
+  - Teams are composed of a single **Product Owner** and a number of **Team Members**.
+
+  ![2-6-unbounded-model](images/2-6-unbounded-model.png)
+
+- And shared calendars should not be limited to **bland** Calendar Entries.
+
+  - Specific kinds of Calendar Entries, such as Reminders, Team Milestones, Planning and Retrospective Meetings, and Target Dates.
+
+  ![2-7-unbounded-model](images/2-7-unbounded-model.png)
+
+- The **LANGUAGE** is no longer purely about Scrum.
+- For every named element, we might expect to have **two or three more** concepts to support those.
+
+  ![2-8-unbounded-model](images/2-8-unbounded-model.png)
