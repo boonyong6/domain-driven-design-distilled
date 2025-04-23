@@ -263,8 +263,10 @@
   - **Before** - _Allow each backlog item to be committed to a sprint..._
   - **After** - _The product owner commits each backlog item to a sprint..._
 - In many cases, you should name each **persona** involved in the scenario and give some distinguishing attribute to other concepts such as to the backlog item and sprint.
+- **Refined scenario:**
+  - _The product owner commits a backlog item to a sprint. The backlog item may be committed only if it is already scheduled for release, and if a quorum of team members have approved commitment. If it is already committed to a different sprint, it must be uncommitted first. When the commitment completes, notify the sprint from which it was uncommitted and the sprint to which it is now committed._
 
-### Putting Scenarios to Work
+### Putting Scenarios to Work (Executable Specs)
 
 - \[Technique] **Specification by Example**, aka **Behavior-Driven Development (BDD)**.
 
@@ -274,14 +276,14 @@
 
     ```
     Scenario: The product owner commits a backlog item to a sprint
-      -- Conditions
+      // Conditions
       Given a backlog item that is scheduled for release
       And the product owner of the backlog item
       And a sprint for commitment
       And a quorum of team approval for commitment
-      -- Action
+      // Action
       When the product owner commits the backlog item to the sprint
-      -- Result
+      // Result
       Then the backlog item is committed to the sprint
       And the backlog item committed event is created
     ```
