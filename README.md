@@ -250,7 +250,7 @@
 - But, when **constraining a Core Domain down to essential model**, we can focus on nouns.
 - **Accelerate Your Discovery**
   - **Event Storming**
-  - \***Concrete scenarios**. E.g.:
+  - \***Concrete scenarios**
 - Express your _Core Domain_ as a set of **concrete scenarios**.
   - Example (**Not a perfect example**, but it's a good start):
     - _Allow each backlog item to be committed to a sprint. The backlog item may be committed only if it is already scheduled for release. If it is already committed to a different sprint, it must be uncommitted first. When the commit completes, notify interested parties._
@@ -295,3 +295,32 @@
 
 - The best learning, or knowledge acquisition, **take place over a long period of time**.
 - It is a **mistake** for teams to take the view that innovation ends when maintenance begins.
+
+## Architecture
+
+- Hexagonal Architecture
+
+  ![2-17-ports-and-adapters-architecture](images/2-17-ports-and-adapters-architecture.png)
+
+- Common **layers** in a _Bounded Context_:
+
+  1. **_Input Adapters_** - User interface controllers, REST endpoints, and message listeners (subscribers)
+  2. **_Application Services_** - Orchestrate use cases, manage transactions.
+  3. \***_Domain model_** (Core)
+  4. **_Output Adapters_** - Persistence management, message senders (publishers)
+
+  ![2-18-ports-and-adapters-architecture](images/2-18-ports-and-adapters-architecture.png)
+
+- **Domain model** should be **free of technology**.
+  - That's why **transactions** are managed by the **application services**.
+- \***Ports and Adapters** can be used as a **foundational architecture** (basis).
+- Architectures that can be used with DDD:
+  - Event-Driven Architecture - Event Sourcing, Domain Events.
+  - CQRS
+  - Reactive and Actor Model
+  - REST
+  - SOA
+  - \***Microservices** - Essentially equivalent to DDD **_Bounded Contexts_**.
+  - Cloud computing
+- Some consider a microservice to be much smaller than a DDD _Bounded Context_.
+  - **Example:** Both the **Product microservice** and the **BacklogItem microservice** will still be **in the same** larger, logical **_Bounded Context_**.
