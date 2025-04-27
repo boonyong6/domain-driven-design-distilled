@@ -324,3 +324,46 @@
   - Cloud computing
 - Some consider a microservice to be much smaller than a DDD _Bounded Context_.
   - **Example:** Both the **Product microservice** and the **BacklogItem microservice** will still be **in the same** larger, logical **_Bounded Context_**.
+
+# Chapter 3.Strategic Design with Subdomains
+
+- The **most optimal** modeling composition: one _Subdomain_ per _Bounded Context_, and one _Bounded Context_ per _Subdomain_.
+
+## What Is a Subdomain?
+
+- **Sub-part** of your overall business domain.
+- A **single, logical** domain model.
+- **Clear** area of expertise.
+
+## Types of Subdomains
+
+![3-1-types-of-subdomains](images/3-1-types-of-subdomains.png)
+
+1. **_Core Domain_**
+   - This is where you **invest significant resources**.
+   - Since an organization can't be excellent in everything, _Core Domain_ **defines where it must excel**.
+2. **_Supporting Subdomain_**
+   - **Custom development** is required as **no off-the-shell solution** exists.
+   - Could consider outsourcing this kind of _Bounded Context_.
+3. **_Generic Subdomain_**
+   - May be available for purchase **off-the-shelf**.
+   - May be outsourced.
+   - Developed in house by a team that doesn't have the kind of elite developers.
+
+## Dealing with Complexity
+
+- **Sources** of complexity:
+  - **Legacy systems**
+  - Systems purchased through software licensing
+- Need to reason about them when they have an impact on your _Core Domain_ project.
+- **Unbounded legacy systems**
+  - **Opposed to** the DDD way of designing with _Bounded Contexts_.
+  - Many logical domain models exist inside one legacy system.
+- Can use **_Subdomains_** to **identify** each logical domain models (marked off by a dashed box).
+
+  - We **imagine** having separate _Ubiquitous Languages_ so we can understand **how to integrate with it**.
+  - This way we can determine the _Subdomains_ that are **more valuable** to the business and necessary for our project.
+
+  ![3-2-unbounded-model-with-logical-subdomains](images/3-2-unbounded-model-with-logical-subdomains.png)
+
+- If you must create a **second model in the same _Bounded Context_ (within _Core Domain_)**, you should **segregate it** using a **separate Module** as a **supporting subdomain**.
