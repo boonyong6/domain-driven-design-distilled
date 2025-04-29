@@ -367,3 +367,92 @@
   ![3-2-unbounded-model-with-logical-subdomains](images/3-2-unbounded-model-with-logical-subdomains.png)
 
 - If you must create a **second model in the same _Bounded Context_ (within _Core Domain_)**, you should **segregate it** using a **separate Module** as a **supporting subdomain**.
+
+# Chapter 4. Strategic Design with Context Mapping
+
+- **_Context Mapping_** - To integrate _Bounded Contexts_.
+- E.g. _Collaboration Context_ is the **source** of the `Discussion`, and the _Agile Project Management Context_ is the **consumer** of the `Discussion`.
+
+  ![4-1-context-mapping](images/4-1-context-mapping.png)
+
+- The mapping line represents the **translation** that exists between the **two languages**.
+- Either the teams would need an **interpreter**, or have to **learn about the other's language**.
+- \*There are several kinds of **inter-team relationship** and **integration**.
+
+## Kinds of Mappings
+
+### 1. Partnership (in the same boat, highly interdependent)
+
+![4-2-partnership](images/4-2-partnership.png)
+
+- Align the two teams with a **dependent set of goals**.
+- Two teams will succeed or fail **together**.
+- **High commitment** required from both teams.
+- Can be **challenging to maintain** over the **long term**.
+- Best to **set limits** on the term of the relationship.
+
+### 2. Shared Kernel
+
+![4-3-shared-kernel](images/4-3-shared-kernel.png)
+
+- **Share** a small but **common model**.
+- **Only one team** (clear ownership) will maintain the code, build, and test for what is shared.
+- Often **very difficult** to conceive and maintain.
+  - Require **constant agreement** on what constitutes the model to be shared.
+- Feasible if all involved agreed that the **kernel is better than going _Separate Ways_**.
+
+### \*3. Customer-Supplier (Typical, Practical)
+
+![4-4-customer-supplier](images/4-4-customer-supplier.png)
+
+- It's up to the _Customer_ to plan with the _Supplier_ to meet various expectations.
+- **_Supplier_ determines** what the _Customer_ will get and when.
+- A very typical and practical relationship between teams.
+
+### 3.1. \[Downstream] Conformist
+
+![4-5-conformist](images/4-5-conformist.png)
+
+- Downstream team **can't sustain** an effort to translate the Ubiquitous Language of the upstream model.
+- E.g. Consider the need to conform to the Amazon.com model when integrating as one of Amazon's affiliate sellers.
+
+### 3.2. \[Downstream] Anticorruption Layer (Translation)
+
+![4-6-anticorruption-layer](images/4-6-anticorruption-layer.png)
+
+- The **most defensive** _Context Mapping_ relationship, where the downstream team creates a **translation layer**.
+- **Whenever possible**, you should create an _Anticorruption Layer_, so you can produce model concepts that specifically fit your business needs and keep you **isolated from foreign concepts**.
+- The **cost** of the translation layer can be **high**.
+
+### 3.3. \[Upstream] Open Host Service (API)
+
+![4-7-open-host-service](images/4-7-open-host-service.png)
+
+- Defines a **interface** (API) that gives access to your _Bounded Context_ **as a set of services**.
+- If you were Team 2 and could not take time to create an isolating _Anticorruption Layer_, it would be much more **tolerable** to be a **Conformist**.
+
+### 3.4. \[Upstream] Published Language (Content Type)
+
+![4-8-published-language](images/4-8-published-language.png)
+
+- Consumers can translate from and into the **shared language** (contract).
+- E.g. XML, JSON, Protobuf, Avro
+- Use in conjunction with _Open Host Service_.
+
+### 4. Separate Ways
+
+![4-9-separate-ways](images/4-9-separate-ways.png)
+
+- Describes a **situation** where the functionality that you seek is **not fully provided by any** one Ubiquitous Language.
+- In this case **produce your own** specialized solution in your _Bounded Context_.
+
+### Big Ball of Mud
+
+- Serious problems you will experience when you must work in or integrate with one.
+  1. A growing number of _Aggregates_ **cross-contaminate** because of **unwarranted connections and dependencies**.
+  2. Maintaining one part of the _Big Ball of Mud_ **causes ripples** across the model.
+- If you must integrate with one, create an **_Anticorruption Layer_**.
+
+  ![4-10-big-ball-of-mud-integration](images/4-10-big-ball-of-mud-integration.png)
+
+- \*Whatever you do, **don't speak that language!**
