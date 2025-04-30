@@ -456,3 +456,64 @@
   ![4-10-big-ball-of-mud-integration](images/4-10-big-ball-of-mud-integration.png)
 
 - \*Whatever you do, **don't speak that language!**
+
+## Making Good Use of Context Mapping
+
+- The **least favorable** situations - Use **database** or **file system integration**.
+- Three **integration types**:
+  - Messaging (**most robust**) > RESTful HTTP > RPC with SOAP (**least robust**)
+
+### 1. RPC with SOAP (Synchronous)
+
+![4-11-rpc-with-soap](images/4-11-rpc-with-soap.png)
+
+- To make using services from another system look like a simple **method invocation**.
+- Potential problems - Network failure, latency
+- **Strong coupling** between a client _Bounded Context_ (downstream) and the _Bounded Context_ providing the service (upstream).
+- Lack robustness.
+- Your client _Bounded Context_ can be designed with an _Anticorruption Layer_ to **isolate** your model **from unwanted outside influences**.
+
+### 2. RESTful HTTP (Synchronous)
+
+![4-12-restful-http](images/4-12-restful-http.png)
+
+- A **common mistake** - Design resources that **directly reflect** the _Aggregates_ in the domain model.
+- \*Resources should be designed to **follow client-driven use cases**.
+  - What the client needs is what drives the design of the resources, and not the model's current composition.
+
+### 3. Messaging (Asynchronous)
+
+![4-13-messaging](images/4-13-messaging.png)
+
+- One of the **most robust** forms of integration.
+- **Going Asynchronous with REST** - Using REST-based **polling** of a sequentially growing set of resources (e.g. _Domain Events_).
+- **_Aggregate_** in one Bounded Context **PUBLISHES a _Domain Event_**, which could be consumed by **any number** of interested parties.
+- **Are Domain Event CONSUMERS Conformists?**
+  - Should **not use** the event types (e.g. **classes**) of an event publisher.
+  - Should depend only on the **schema of the events** (_Published Language_).
+- Sometimes, however, a client Bounded Context will need to **proactively SEND a _Command Message_** to a service Bounded COntext to force some action.
+- The quality of the overall solution will **depend heavily** on the quality of the chosen messaging mechanism.
+  - Basically, the messaging mechanism should support **_At-Least-Once Delivery_**.
+- **Subscribing** _Bounded Context_ must be implemented as an **_Idempotent Receiver_** because it is possible for the message to be **delivered more than once**.
+  - \***Idempotency** (preferred) - Safely reapplies the operation with the exact same results that the previous delivery caused (no tracking required).
+  - **De-duplication** - Ignores the repeated message by tracking the message ID.
+
+## An Example in Context Mapping
+
+- Three different Policy types in three different _Bounded Contexts_.
+
+  ![4-14-three-different-policy-types](images/4-14-three-different-policy-types.png)
+
+- **Where** does the "policy of record" live?
+  - Belong to the **underwriting** division since that is where it **originates** (source).
+- **Query-Back** - If there is a need **for more Policy data** than the `PolicyIssued` _Domain Event_ provided, the **subscribing** _Bounded Context_ can **query** the _Underwriting Context_.
+
+  - **Cons** - More network round trips.
+
+  ![4-15-query-back](images/4-15-query-back.png)
+
+- **Enrichment** - Enriching Domain Events with data to satisfy the needs of all consumers.
+- **Enrichment versus Query-Back Trade-offs**
+  - Enrichment = Greater autonomy
+    - **But**, difficult to predict the data that all consumers need.
+    - Too much enrichment can lead to **poor security**.
