@@ -491,7 +491,7 @@
 - **Are Domain Event CONSUMERS Conformists?**
   - Should **not use** the event types (e.g. **classes**) of an event publisher.
   - Should depend only on the **schema of the events** (_Published Language_).
-- Sometimes, however, a client Bounded Context will need to **proactively SEND a _Command Message_** to a service Bounded COntext to force some action.
+- Sometimes, however, a client Bounded Context will need to **proactively SEND a _Command Message_** to a service Bounded Context to force some action.
 - The quality of the overall solution will **depend heavily** on the quality of the chosen messaging mechanism.
   - Basically, the messaging mechanism should support **_At-Least-Once Delivery_**.
 - **Subscribing** _Bounded Context_ must be implemented as an **_Idempotent Receiver_** because it is possible for the message to be **delivered more than once**.
