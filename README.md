@@ -517,3 +517,35 @@
   - Enrichment = Greater autonomy
     - **But**, difficult to predict the data that all consumers need.
     - Too much enrichment can lead to **poor security**.
+
+# Chapter 5. Tactical Design with Aggregates
+
+## Aggregate Overview
+
+- Each of the circled concepts is an _Aggregate_.
+
+  ![5-1-aggregate-overview](images/5-1-aggregate-overview.png)
+
+- **What Is an _Entity_?**
+  - Models an individual thing.
+  - \*Has a **unique identity**.
+  - Can be immutable.
+- **What Is an _Value Object_?**
+  - Simply a _Value_, models an **immutable** conceptual whole.
+  - **Doesn't have** a unique identity.
+  - **Equivalence** is determined by comparing the fields.
+  - Often used to describe, quantify, or measure an _Entity_.
+
+![5-2-aggregate-anatomy](images/5-2-aggregate-anatomy.png)
+
+- Each _Aggregate_ is composed of one or more _Entities_, where **one Entity** is called the **_Aggregate Root_**.
+- **_Root Entity_ owns** all the other elements clustered inside it.
+- \*Forms a **TRANSACTIONAL CONSISTENCY BOUNDARY**.
+  - \***Business motivated** - It is the **business that determines** what a **valid state** of the cluster should be at any given time.
+- Within a single _Aggregate_, **all composed parts must be consistent**, according to business rules.
+- **Doesn't mean** that you are **not supposed** to compose other elements that don't need to be consistent after a transaction.
+- **General rule** of _Aggregate_ design - Each _aggregate_ should be committed in a **single transaction**.
+
+## Aggregate Rules of Thumb (Guidance)
+
+...
