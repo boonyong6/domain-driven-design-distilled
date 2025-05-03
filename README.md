@@ -381,7 +381,7 @@
 
 ## Kinds of Mappings
 
-### 1. Partnership (in the same boat, highly interdependent)
+### 1. Partnership (highly interdependent, in the same boat)
 
 ![4-2-partnership](images/4-2-partnership.png)
 
@@ -389,7 +389,7 @@
 - Two teams will succeed or fail **together**.
 - **High commitment** required from both teams.
 - Can be **challenging to maintain** over the **long term**.
-- Best to **set limits** on the term of the relationship.
+- Often, teams will **set limits** on the terms of the relationship.
 
 ### 2. Shared Kernel
 
@@ -397,9 +397,9 @@
 
 - **Share** a small but **common model**.
 - **Only one team** (clear ownership) will maintain the code, build, and test for what is shared.
-- Often **very difficult** to conceive and maintain.
+- Often **very difficult** to plan and maintain.
   - Require **constant agreement** on what constitutes the model to be shared.
-- Feasible if all involved agreed that the **kernel is better than going _Separate Ways_**.
+- Feasible if **all involved** agreed that the **kernel is better than going [_Separate Ways_](#4-separate-ways)**.
 
 ### \*3. Customer-Supplier (Typical, Practical)
 
@@ -548,4 +548,174 @@
 
 ## Aggregate Rules of Thumb (Guidance)
 
-...
+- Four basic rules of _Aggregate_ design:
+  1. Protect **business invariants**.
+  2. Design **small** _Aggregates_.
+  3. Reference other _Aggregates_ **by identity only**.
+  4. Update other _Aggregates_ using **eventual consistency**.
+- Not necessarily need to be strictly enforced.
+- Help you design _Aggregates_ that work effectively.
+
+### Rule 1: Protect Business Invariants inside Aggregate Boundaries
+
+- E.g. Business rule - When all `Task` instances have `hoursRemaining` of zero, the `BacklogItem` status must be set to `DONE`.
+
+  ![5-3-business-invariants](images/5-3-business-invariants.png)
+
+### Rule 2: Design Small Aggregates
+
+- **Memory footprint** and **transactional scope** should be relatively **small**.
+- **Problems with large aggregate**
+
+  - Over time, these collections **could grow to be quite large**.
+  - Often violate the **Single Responsibility Principle (SPR)**
+    - What is the **reason to change Product**: to make it a better Scrum product, or to manage backlog items, releases, and sprints?
+
+  ![5-4-large-aggregate](images/5-4-large-aggregate.png)
+
+- So, we break up the large _Aggregate_.
+
+  - Load quickly, take less memory, and are faster to garbage collect.
+
+  ![5-5-small-aggregate](images/5-5-small-aggregate.png)
+
+- Added benefit:
+  - Each _Aggregate_ will be **easier to work on**.
+  - Each associated task can be managed by a single developer.
+  - Will be **easier to test**.
+
+### Rule 3: Reference Other Aggregates by Identity Only
+
+- \*Help keep the _Aggregate_ design **small** and **efficient**.
+- \*Help enforce the rule **not to modify other _Aggregate_** instances within the same transaction.
+  - **With only identities**, there is **no easy way to obtain a direct object reference**.
+- With this, _Aggregates_ can be easily stored in any kind of persistence mechanism.
+
+### Rule 4: Update Other Aggregates Using Eventual Consistency
+
+![5-6-eventual-consistency](images/5-6-eventual-consistency.png)
+
+- Interested _Bounded Context_ **can be the same one** from which the _Domain Event_ was published, or it could be different.
+
+## Modeling Aggregates
+
+- ⚠ **Hooks/traps** when implementing _Aggregates_:
+  - One big, nasty hook is the **_Anemic Domain Model_**.
+    - All of your _Aggregates_ have only public accessors but **no real business behavior**.
+  - Watch out for leaking business logic into the **Application Services**.
+  - Delegating business logic from services to **helper/utility classes isn't going to work** out well either.
+- **What about Functional Programming?**
+  - _Anemic Domain Model_ is somewhat the **norm** when applying functional programming.
+  - Because functional programming promotes the separation of data and behavior.
+- \***Technical components** you will need to implement a **basic _Aggregate_ design**.
+
+  1. Create a **class** for your **_Aggregate Root Entity_**, and extends a **base class** named **Entity**.
+
+     ```csharp
+     public class Product : Entity // <--
+     {
+       ...
+     }
+     ```
+
+  2. Every _Aggregate Root Entity_ must have a globally **unique identity**.
+
+     ```csharp
+     public record ProductId(Guid Value);
+
+     public class Product : Entity
+     {
+       private ProductId productId; // <--
+     }
+     ```
+
+  3. Capture **fields** that are necessary **for finding the _Aggregate_**.
+
+     ```csharp
+     public class Product : Entity
+     {
+       private string description;  // <--
+       private string name;         // <--
+       private ProductId productId;
+       private TenantId tenantId;
+     }
+     ```
+
+  4. Can add **simple behavior** (e.g. **getters**) for fields.
+
+     - \***May not** want to **expose setters** as public (to fight _Anemic Domain Model_).
+       - ⚠ If you expose public setters, the **logic** for setting values would be **implemented outside the model**.
+     - Change internal state using **methods**.
+
+     ```csharp
+     public class Product : Entity
+     {
+       ...
+       public string Description { get; private set; }
+       public string Name { get; private set; }
+     }
+     ```
+
+  5. Add **complex behavior** (methods) to **manage the state** of an object.
+
+     ```csharp
+     public class Product : Entity
+     {
+       ...
+       public void PlanBacklogItem()
+       {
+         ...
+       }
+
+       public void PlannedProductBacklogItem()
+       {
+         ...
+       }
+
+       public void ScheduleRelease()
+       {
+         ...
+       }
+
+       public void ScheduleSprint()
+       {
+         ...
+       }
+     }
+     ```
+
+### Choose Your Abstractions Carefully
+
+- Need to choose the **appropriate level of abstraction** for each concept being modeled.
+- When the level of abstraction is **too high**:
+  - Software model does not match the mental model of the _Domain Experts_.
+  - Often result in a **complex class hierarchy** with general approaches to explicit problems.
+- **Incorrect level of abstractions** is used often in **technically inspired** implementations.
+- \*Model the _Ubiquitous Language_ explicitly according to the mental model of the _Domain Experts_.
+
+### Right-Sizing Aggregates
+
+- How you can determine the boundaries of _Aggregates_?
+
+#### Aggregate Design Steps
+
+1. **Design small _Aggregate_**
+   - Start by creating every _Aggregate_ **with just one _Entity_**.
+   - Define **field** that are required **to identify and find** the _Aggregate_.
+   - Define **fields** that are required for the _Aggregate_ to be constructed and left in a **valid initial state**.
+2. **Protect business invariants inside _Aggregate_ boundaries**
+   - Ask _Domain Experts_ if any other _Aggregates_ must be updated in **reaction to changes** made to an _Aggregate_.
+3. Ask _Domain Experts_ **how much time may elapse (time frames)** until each of the reaction-based updates may take place. **Two kinds** of specifications:
+   1. Immediately
+   2. Within N seconds/minutes/hours/days.
+4. For **immediate** time frames
+   - Strongly consider composing those two _Entities_ within the **same _Aggregate_ boundary**.
+5. For reacting _Aggregates_ that can be updated following a given **elapsed time**
+   - Update using **eventual consistency**.
+
+- Often, model design is influenced by database design (which is not what we want).
+  - **Very unlikely** that the business really needs **immediate consistency in every case**.
+  - To change this, you can
+    - Prove how transactions **will fail due to concurrent updates** by multiple users across different composed parts of the **large-cluster _Aggregates_**.
+    - Point out the **memory overhead** of large-cluster designs.
+- **Tip:** Considering what the business would have to do if it ran its operations only by means of **paper systems** can provide some insights into how various domain-driven operations should work within a software model.
