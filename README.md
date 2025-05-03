@@ -565,7 +565,7 @@
 ### Rule 2: Design Small Aggregates
 
 - **Memory footprint** and **transactional scope** should be relatively **small**.
-- **Problems with large aggregate**
+- **Problems with large _Aggregate_:**
 
   - Over time, these collections **could grow to be quite large**.
   - Often violate the **Single Responsibility Principle (SPR)**
@@ -696,22 +696,21 @@
 ### Right-Sizing Aggregates
 
 - How you can determine the boundaries of _Aggregates_?
+- _Aggregate_ Design Steps:
 
-#### Aggregate Design Steps
-
-1. **Design small _Aggregate_**
-   - Start by creating every _Aggregate_ **with just one _Entity_**.
-   - Define **field** that are required **to identify and find** the _Aggregate_.
-   - Define **fields** that are required for the _Aggregate_ to be constructed and left in a **valid initial state**.
-2. **Protect business invariants inside _Aggregate_ boundaries**
-   - Ask _Domain Experts_ if any other _Aggregates_ must be updated in **reaction to changes** made to an _Aggregate_.
-3. Ask _Domain Experts_ **how much time may elapse (time frames)** until each of the reaction-based updates may take place. **Two kinds** of specifications:
-   1. Immediately
-   2. Within N seconds/minutes/hours/days.
-4. For **immediate** time frames
-   - Strongly consider composing those two _Entities_ within the **same _Aggregate_ boundary**.
-5. For reacting _Aggregates_ that can be updated following a given **elapsed time**
-   - Update using **eventual consistency**.
+  1. **Design small _Aggregate_**
+     - Start by creating every _Aggregate_ **with just one _Entity_**.
+     - Define **fields** that are required **to identify and find** the _Aggregate_.
+     - Define **fields** that are required for the _Aggregate_ to be constructed and left in a **valid initial state**.
+  2. **Protect business invariants inside _Aggregate_ boundaries**
+     - Ask _Domain Experts_ if any other _Aggregates_ must be updated in **reaction to changes** made to an _Aggregate_.
+  3. Ask _Domain Experts_ **how much time may elapse (time frames)** until each of the reaction-based updates may take place. **Two kinds** of specifications:
+     1. Immediately
+     2. Within N seconds/minutes/hours/days.
+  4. For **immediate** time frames
+     - Strongly consider composing those two _Entities_ within the **same _Aggregate_ boundary**.
+  5. For reacting _Aggregates_ that can be updated following a given **elapsed time**
+     - Update using **eventual consistency**.
 
 - Often, model design is influenced by database design (which is not what we want).
   - **Very unlikely** that the business really needs **immediate consistency in every case**.
