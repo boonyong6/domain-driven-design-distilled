@@ -718,3 +718,94 @@
     - Prove how transactions **will fail due to concurrent updates** by multiple users across different composed parts of the **large-cluster _Aggregates_**.
     - Point out the **memory overhead** of large-cluster designs.
 - **Tip:** Considering what the business would have to do if it ran its operations only by means of **paper systems** can provide some insights into how various domain-driven operations should work within a software model.
+
+# Chapter 6. Tactical Design with Domain Events
+
+- A record of some **business-significant occurrence**.
+- Become a **part** of your **_Core Domain_**.
+- \*Can be used to achieve **CAUSAL CONSISTENCY** (one operation causes another).
+  - Casually related operations **must occur in a specific order**.
+
+## Designing, Implementing, and Using Domain Events
+
+- The minimum **C# interface** example:
+
+  ```csharp
+  public interface DomainEvent
+  {
+    // Not an absolute necessity, but it is often useful.
+    public Date OccurredOn  // <--
+    {
+      get;
+    }
+  }
+  ```
+
+- \*Must show care in **how you name** your _Domain Event_ types.
+- _Domain Event_ type names:
+
+  - Should reflect your model's _Ubiquitous Language_.
+  - Should be a statement of a **past occurrence**.
+  - Examples:
+
+    ![6-1-domain-event-type-names-example](images/6-1-domain-event-type-names-example.png)
+
+- It is the **_Domain Event_'s name** and its **properties** that **fully conveys** the record of **what happened**.
+- \*A **COMMAND** (just the **object form** of a **method/action request**) is the **stimulus** that causes the _Domain Event_ to be published.
+
+  - Example:
+
+    ![6-2-stimulus-of-domain-event](images/6-2-stimulus-of-domain-event.png)
+
+  - Command contains **essential properties** for creating a domain object.
+
+    ![6-3-command-and-domain-event-properties-example](images/6-3-command-and-domain-event-properties-example.png)
+
+- _Domain Event_ should **hold all the properties that were provided with the command**.
+- This will **fully and accurately** inform all subscribers.
+  - Must be careful not to fill up with **so much data** that it **loses its meaning**.
+- **BAD example** - `BacklogItemUpdated` (Technical-specific, not domain-driven)
+- \***Example scenario:**
+
+  ![6-4-example-scenario](images/6-4-example-scenario.png)
+
+  - The command causes the `BacklogItem` and the `Sprint` to be **loaded**.
+  - Then, the command is executed on the `BacklogItem` _Aggregate_.
+  - `BacklogItemCommitted` _Domain Event_ is published as an outcome.
+
+  ![6-5-example-scenario](images/6-5-example-scenario.png)
+
+  - \*The modified _Aggregate_ and the _Domain Event_ **must be saved together in the SAME TRANSACTION**.
+  - Save the _Domain Event_ to an **outbox** table.
+
+  ![6-6-example-scenario](images/6-6-example-scenario.png)
+
+  - It is the responsibility of the **CONSUMER** to **recognize proper causality**.
+  - Causality could be indicated by:
+    - Domain Event type itself.
+    - Domain Event's metadata, such as a sequence or causal identifier (e.g. command ID).
+  - Consumer **must wait** to process the event **until its cause arrives**.
+  - In some cases it is possible to **ignore** Domain Events that have already been **superseded by** the actions associated with a **later one** (**dismissible**).
+
+- **Time-based _Domain Event_**
+  - Another **noteworthy cause** of _Domain Events_.
+  - Often it is a user-based command, sometimes _Domain Events_ can be caused by a **difference source** (e.g. from a timer that expires).
+  - Such an expiring time frame **will generally have a descriptive name** that will become part of the _Ubiquitous Language_.
+  - **Example:** `FiscalYearEnded`.
+- Command is **different** from a _Domain Event_ in that a command **can be rejected**, due to:
+  - **Supply and availability** of some resources (e.g. stock, funds).
+  - Business-level **validation**.
+- _Domain Event_ is **a matter of history** (fact) and **can't be denied**.
+
+## Event Sourcing
+
+- Rather than persisting the Aggregate state as a whole, you store all the individual Domain Events that have happened to it.
+- Event store is just a **sequential storage collection**.
+
+### Performance Conscious
+
+- **Caching** and **snapshots**.
+- Maintaining a **snapshot** of some incremental state of your Aggregate in the database.
+- Can be helpful to business, such as compliance and analytics.
+- Can use **event streams** to **examine usage trends** and to **troubleshoot**.
+- When you use **_Event Sourcing_** you are almost certainly **obligated to use CQRS**.
