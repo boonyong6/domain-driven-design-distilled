@@ -144,7 +144,6 @@
   ![2-2-unbounded-model](images/2-2-unbounded-model.png)
 
 - Let's say we want to facilitate collaboration discussions within the **product team**.
-
   - Tenant, User, Permission models are needed to identify and authorize users.
   - Discussion represents one of the **collaborative tools** that we will support.
 
@@ -155,20 +154,17 @@
   ![2-4-unbounded-model](images/2-4-unbounded-model.png)
 
 - And we need a way for **Tenants** to make **Payments**.
-
   - Will also sell tiered **support plans**, so we need a way to track support **incidences**.
   - Managed under an **Account**.
 
   ![2-5-unbounded-model](images/2-5-unbounded-model.png)
 
 - And every product has a specific **Team** that works on the product.
-
   - Teams are composed of a single **Product Owner** and a number of **Team Members**.
 
   ![2-6-unbounded-model](images/2-6-unbounded-model.png)
 
 - And shared calendars should not be limited to **bland** Calendar Entries.
-
   - Specific kinds of Calendar Entries, such as Reminders, Team Milestones, Planning and Retrospective Meetings, and Target Dates.
 
   ![2-7-unbounded-model](images/2-7-unbounded-model.png)
@@ -188,7 +184,6 @@
 - **Note:** Concepts that survive the **stringent application of core-only filtering** are part of the _Ubiquitous Language_ of the team that owns the _Bounded Context_.
 
 - How do we know **what is core?**
-
   - Have to bring together **two vital groups** of individuals into **one cohesive**, collaborative team: **_Domain Experts_** and **_software developers_**.
   - **Example:** In the domain of **Scrum**, count on the **_Domain Expert_** being a **Scrum Master** who thoroughly understands how Scrum is executed on a project.
 
@@ -225,20 +220,17 @@
   ![2-13-out-of-context](images/2-13-out-of-context.png)
 
 - **In context, but out of scope.** So, save it for later.
-
   - Calendar-based `Milestones`, `Retrospectives`, and the like.
 
   ![2-14-in-context-but-out-of-scope](images/2-14-in-context-but-out-of-scope.png)
 
 - Assuming **threaded `Discussions`** will be part of the core model.
-
   - But, it requires a lot of **ancillary software component support**.
   - Hence, the full **Collaboration suite is out of context**.
 
   ![2-15-out-of-context](images/2-15-out-of-context.png)
 
 - **Core Domain** - Essential model elements.
-
   - The model will **grow only as new concepts adhere to** the _Ubiquitous Language_ of Scrum.
 
   ![2-16-bounded-model](images/2-16-bounded-model.png)
@@ -269,7 +261,6 @@
 ### Putting Scenarios to Work (Executable Specs)
 
 - \[Technique] **Specification by Example**, aka **Behavior-Driven Development (BDD)**.
-
   - It's to **collaboratively** develop and refine a _Ubiquitous Language_, model with a **shared understanding**, and determine whether your model **adheres to your specifications**.
   - By creating **acceptance tests**.
   - Restate the preceding scenario as an **executable specification**:
@@ -303,7 +294,6 @@
   ![2-17-ports-and-adapters-architecture](images/2-17-ports-and-adapters-architecture.png)
 
 - Common **layers** in a _Bounded Context_:
-
   1. **_Input Adapters_** - User interface controllers, REST endpoints, and message listeners (subscribers)
   2. **_Application Services_** - Orchestrate use cases, manage transactions.
   3. \***_Domain model_** (Core)
@@ -360,7 +350,6 @@
   - **Opposed to** the DDD way of designing with _Bounded Contexts_.
   - Many logical domain models exist inside one legacy system.
 - Can use **_Subdomains_** to **identify** each logical domain models (marked off by a dashed box).
-
   - We **imagine** having separate _Ubiquitous Languages_ so we can understand **how to integrate with it**.
   - This way we can determine the _Subdomains_ that are **more valuable** to the business and necessary for our project.
 
@@ -507,7 +496,6 @@
 - **Where** does the "policy of record" live?
   - Belong to the **underwriting** division since that is where it **originates** (source).
 - **Query-Back** - If there is a need **for more Policy data** than the `PolicyIssued` _Domain Event_ provided, the **subscribing** _Bounded Context_ can **query** the _Underwriting Context_.
-
   - **Cons** - More network round trips.
 
   ![4-15-query-back](images/4-15-query-back.png)
@@ -566,7 +554,6 @@
 
 - **Memory footprint** and **transactional scope** should be relatively **small**.
 - **Problems with large _Aggregate_:**
-
   - Over time, these collections **could grow to be quite large**.
   - Often violate the **Single Responsibility Principle (SPR)**
     - What is the **reason to change Product**: to make it a better Scrum product, or to manage backlog items, releases, and sprints?
@@ -574,7 +561,6 @@
   ![5-4-large-aggregate](images/5-4-large-aggregate.png)
 
 - So, we break up the large _Aggregate_.
-
   - Load quickly, take less memory, and are faster to garbage collect.
 
   ![5-5-small-aggregate](images/5-5-small-aggregate.png)
@@ -608,7 +594,6 @@
   - _Anemic Domain Model_ is somewhat the **norm** when applying functional programming.
   - Because functional programming promotes the separation of data and behavior.
 - \***Technical components** you will need to implement a **basic _Aggregate_ design**.
-
   1. Create a **class** for your **_Aggregate Root Entity_**, and extends a **base class** named **Entity**.
 
      ```csharp
@@ -642,7 +627,6 @@
      ```
 
   4. Can add **simple behavior** (e.g. **getters**) for fields.
-
      - \***May not** want to **expose setters** as public (to fight _Anemic Domain Model_).
        - ⚠ If you expose public setters, the **logic** for setting values would be **implemented outside the model**.
      - Change internal state using **methods**.
@@ -697,7 +681,6 @@
 
 - How you can determine the boundaries of _Aggregates_?
 - _Aggregate_ Design Steps:
-
   1. **Design small _Aggregate_**
      - Start by creating every _Aggregate_ **with just one _Entity_**.
      - Define **fields** that are required **to identify and find** the _Aggregate_.
@@ -743,7 +726,6 @@
 
 - \*Must show care in **how you name** your _Domain Event_ types.
 - _Domain Event_ type names:
-
   - Should reflect your model's _Ubiquitous Language_.
   - Should be a statement of a **past occurrence**.
   - Examples:
@@ -752,7 +734,6 @@
 
 - It is the **_Domain Event_'s name** and its **properties** that **fully conveys** the record of **what happened**.
 - \*A **COMMAND** (just the **object form** of a **method/action request**) is the **stimulus** that causes the _Domain Event_ to be published.
-
   - Example:
 
     ![6-2-stimulus-of-domain-event](images/6-2-stimulus-of-domain-event.png)
@@ -768,18 +749,15 @@
 - \***Example scenario:**
 
   ![6-4-example-scenario](images/6-4-example-scenario.png)
-
   - The command causes the `BacklogItem` and the `Sprint` to be **loaded**.
   - Then, the command is executed on the `BacklogItem` _Aggregate_.
   - `BacklogItemCommitted` _Domain Event_ is published as an outcome.
 
   ![6-5-example-scenario](images/6-5-example-scenario.png)
-
   - \*The modified _Aggregate_ and the _Domain Event_ **must be saved together in the SAME TRANSACTION**.
   - Save the _Domain Event_ to an **outbox** table.
 
   ![6-6-example-scenario](images/6-6-example-scenario.png)
-
   - It is the responsibility of the **CONSUMER** to **recognize proper causality**.
   - Causality could be indicated by:
     - Domain Event type itself.
@@ -809,3 +787,139 @@
 - Can be helpful to business, such as compliance and analytics.
 - Can use **event streams** to **examine usage trends** and to **troubleshoot**.
 - When you use **_Event Sourcing_** you are almost certainly **obligated to use CQRS**.
+
+# Chapter 7. Acceleration and Management Tools
+
+## \*Event Storming
+
+- A **rapid** design technique.
+- Fast-paced learning process.
+- Focused on the business and **business process**.
+- A way to get **business expert** more **directly involved** in the process.
+- Tool - **sticky notes**
+- **Advantages:**
+  - Everyone provides input in the **ubiquitous language**.
+  - **Forces** everyone on **events** and the **business process** rather than on classes and the database.
+  - **Fast** and **cheap** to perform. Can storm out a new **Core Domain** in rough format in a matter of **hours**.
+  - If project members do not understand what they are working on until it is too late and the damage is already in the code.
+  - Can use for both **_big-picture_** and **_design-level_ modeling**.
+    - **_Design-level_** storming will lead you toward certain **software artifacts**.
+- **People**, **mindset**, and **supplies** you will need for event storming:
+  - Having the **right people** is essential.
+    - _Domain Experts_
+    - Developers
+  - **Biggest Mistake** - Trying to be **too correct too soon**.
+    - Should rather create far too **many events**.
+    - That's what will make you learn the most.
+    - **Refine later**, and refinement is fast and cheap.
+  - Colors of **sticky notes**
+    - Don't need to write much on the sticky note.
+  - Black marker pen for each person.
+  - Wide wall where you can model.
+
+### Steps
+
+1. Storm out **business process** by creating **a series of _Domain Events_ (<span style="display:inline-block;width:12px;height:12px;background-color:orange;"></span> orange)** on sticky notes.
+
+   ![7-1-identify-domain-events](images/7-1-identify-domain-events.png)
+   - Creating **_Domain Events_ FIRST**. Primary focus on the **business process**, not on the data.
+   - Name the _Domain Event_ - **Verb** stated in the **past tense**. E.g. **ProductCreated**.
+   - \*Place the sticky notes in **time order** (If time order is unclear, just put the corresponding _Domain Events_ somewhere in the model)
+   - _Domain Events_ can happen in **parallel** - Use **vertical space** to represent parallel processing.
+   - When you find **trouble spots**, mark these with a **<span style="display:inline-block;width:12px;height:12px;background-color:purple;"></span> purple / <span style="display:inline-block;width:12px;height:12px;background-color:red;"></span> red sticky note**, and explains why it's a problem.
+   - _Domain Event_ that causes/triggers a **_Process_ (<span style="display:inline-block;width:12px;height:12px;background-color:#C8A2C8;"></span> lilac)** to be executed should be captured.
+   - Model a **fine-grained** Domain Event **only if it is important** to your **_Core Domain_**. For example, user registration is not considered a core feature.
+
+2. Create the **_Commands_ (<span style="display:inline-block;width:12px;height:12px;background-color:#89CFF0;"></span> light blue)** that cause each _Domain Event_.
+
+   ![7-2-identify-commands](images/7-2-identify-commands.png)
+   - **Sometimes** a _Domain Event_ will be the outcome of a **happening in another system**.
+   - **Often**, a _Command_ will be the outcome of some **user action**.
+   - Associated in **pairs** - Command/Event (Some _Domain Events_ will occur because of time limits being reached)
+   - Use **<span style="display:inline-block;width:12px;height:12px;background-color:#FFFF00;"></span> bright yellow** sticky note to represent the specific **_User Role_** (e.g. Product Owner) that performs the action. Place it on the lower left corner of the command.
+   - Sometimes a _Command_ will cause the **_Process_** (<span style="display:inline-block;width:12px;height:12px;background-color:#C8A2C8;"></span> lilac) to be run. Draw a line with an **arrowhead** from the _Command_ to the named _Process_.
+   - **One _Command_** could cause **multiple _Domain Events_**.
+
+3. **Associate** the **_Entity/Aggregate_** with _Commands_ and _Domain Events_.
+
+   ![7-3-associate-entity](images/7-3-associate-entity.png)
+   - <span style="display:inline-block;width:12px;height:12px;background-color:#FDFD96;"></span> Aggregate, entity or data are usually used interchangeably.
+   - Use **noun**. E.g. Product or BacklogItem
+   - \*The **main point** is to **model the business process**. The business process **occurs over time**.
+   - When _Aggregates_ are too complex, then you might need to break these into a managed _Process_ (<span style="display:inline-block;width:12px;height:12px;background-color:#C8A2C8;"></span> lilac).
+
+4. Draw **boundaries** and **lines with arrows** to **show flow** on your modeling surface.
+
+   ![7-4-define-boundaries](images/7-4-define-boundaries.png)
+   - You have discovered that there are multiple models in play, and _Domain Events_ that flow between models.
+   - Very likely find **boundaries** by **departmental divisions**.
+   - Draw lines with arrowheads to show the direction of _Domain Events_ floating between _Bounded Contexts_. This is a way to communicate that some _Domain Events_ arrive without being caused by a _Command_.
+
+5. Identify **views** that your user will need to carry out their **actions**, and **roles**.
+
+   ![7-5-draw-wireframe](images/7-5-draw-wireframe.png)
+   - Show any **significant** views, such as draw a **wireframe**.
+   - Identify the important **user roles** if you need to communicate something of significant that the system does for them.
+
+### Other tools
+
+- Specification by example
+- Impact mapping
+- User Story Mapping
+
+## Managing DDD on an Agile project
+
+### First things first
+
+- Hire good people. Above-average developers.
+- DDD is an advanced philosophy and technique.
+
+### Use SWOT analysis
+
+- To determine your project's current situation.
+
+### Modeling Spikes and Modeling Debt
+
+- Use **_Event Storming_** at the start of a project.
+- Of course, you can't expect to model your domain perfectly from the start.
+- Allocate sufficient time for modeling to reduce the modeling debt. FYI, modeling debt is expensive to change.
+
+### Identifying Tasks and Estimating Effort
+
+- Each of the _Domain Events_, _Commands_, and _Aggregates_ that you storm out can be used as **estimation units**.
+- Metrics-based approach example:
+  ![7-6-metrics-based-estimation](images/7-6-metrics-based-estimation.png)
+
+#### Command on Accuracy
+
+- Generally speaking, you usually get within **20% accuracy on long-term estimates**, and **much better on short-term estimates**, such as sprints, iterations, and WIP queues.
+
+## Timeboxed Modeling
+
+- First, you will have estimates for each component type.
+- It's best to combine all of the _Commands_ and all of the _Domain Events_ used by a **single _Aggregate_** into a single task.
+
+### How to implement
+
+- **_Concrete Scenarios_** and **_Event Storming_** are two tools that should be used together.
+- Partner with a **_Domain Expert_** to discuss one or more **concrete scenarios**.
+- **Brief and quick iteration** is key.
+- When timebox expires, measure your desired outcome. Then decide whether to extend the timebox for modeling.
+
+### Interacting with Domain Experts
+
+- Major challenges:
+  - **Getting time** with Domain Experts and **without overdoing it**.
+  - Modeling session must be efficient.
+- Key questions:
+  - When do we need time with domain experts?
+  - What tasks do they need to help us perform?
+- Always include _Domain Experts_ in _Event Storming_ activities.
+- Need Domain Experts:
+  - To provide input on the creation of model scenarios.
+  - To review tests to verify model correctness.
+  - To refine the _Ubiquitous Language_ and its _Aggregates_ names, _Commands_, and _Domain Events_.
+- _Event Storming_ sessions should be limited to a few hours (2 or 3) each on consecutive days.
+- Give a **generous amount of time** for **scenario discussion** and refinement.
+- Accurate models require less time to review and verify.
+- Use **realistic test data**.
